@@ -48,22 +48,24 @@ public class ReviewController {
         });
     }
     @PostMapping
-    public Review createAuthor(@RequestBody Review review){
+    public Review createReview(@RequestBody Review review){
         return reviewRepository.save(review);
     }
-    @PutMapping("/{id}")
-    public Review updateAuthor(@PathVariable Long id, @RequestBody Review newReview){
-        Review review = reviewRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Khong tim thay"));
-        review.setContent(newReview.getContent());
-        return reviewRepository.save(review);
+@PutMapping("/{id}")
+    public Review updateReview(@PathVariable Long id, @RequestBody Review newReview) {
+        return reviewRepository.findById(id)
+                .map(review -> {
+                    review.setContent(newReview.getContent());
+                    return reviewRepository.save(review);
+                })
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Review với id: " + id));
     }
     @GetMapping("/all")
     public List<Review> getAll(){
         return reviewRepository.findAll();
     }
     @DeleteMapping("/{id}")
-    public void deleteAuthor(@PathVariable Long id){
+    public void deleteReview(@PathVariable Long id){
         reviewRepository.deleteById(id);
     }
 
